@@ -12,6 +12,8 @@ const IMAGE_ITEMS = {
 };
 
 const FLAG = "flag{replace_this_with_your_real_flag}";
+const EXPLOIT_WINDOW_MS = 1;
+const settlementWindows = {};
 
 const playerNameEl = document.getElementById("player-name");
 const creditsEl = document.getElementById("credits");
@@ -82,6 +84,10 @@ function buyImage(itemId) {
 
   player.credits -= item.price;
   player.inventory[itemId] += 1;
+  settlementWindows[itemId] = true;
+  setTimeout(() => {
+    settlementWindows[itemId] = false;
+  }, EXPLOIT_WINDOW_MS);
   savePlayer();
   render();
   setStatus(`${item.name} bought for ${item.price} credits.`, "success");
@@ -95,13 +101,24 @@ function sellImage(itemId) {
     return;
   }
 
+  const soldInsideExploitWindow = Boolean(settlementWindows[itemId]);
+
   player.credits += item.price;
 
-  // Intentional CTF bug: inventory is never decremented after selling.
-  // A player can repeatedly sell one owned image to reach the premium price.
+  // Intentional CTF bug: selling inside the tiny post-buy window credits the
+  // wallet before inventory is finalized, so the owned count is not reduced.
+  if (!soldInsideExploitWindow) {
+    player.inventory[itemId] -= 1;
+  }
+
   savePlayer();
   render();
-  setStatus(`${item.name} sold for ${item.price} credits.`, "success");
+
+  if (soldInsideExploitWindow) {
+    setStatus(`${item.name} sold during settlement window. Extra credit accepted.`, "success");
+  } else {
+    setStatus(`${item.name} sold for ${item.price} credits.`, "success");
+  }
 }
 
 document.getElementById("buy-standard").addEventListener("click", () => buyImage("standard"));

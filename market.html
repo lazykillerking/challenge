@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Credit Vault marketplace" />
+  <title>Credit Vault Market</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main class="app-shell">
+    <section class="vault market-view">
+      <header class="vault-header">
+        <div>
+          <p class="eyebrow">Market account <span id="player-name"></span></p>
+          <h1>Image Market</h1>
+        </div>
+        <div class="wallet" aria-live="polite">
+          <span id="credits">0</span>
+          <small>credits</small>
+        </div>
+      </header>
+
+      <div class="actions">
+        <a class="button-link" href="index.html">Back to vault</a>
+        <button id="logout-btn" type="button">Logout</button>
+      </div>
+
+      <p id="status" class="status" aria-live="polite"></p>
+
+      <section class="gallery" aria-label="Image market listings">
+        <article class="image-tile">
+          <div class="image-preview standard-image" role="img" aria-label="Standard image"></div>
+          <div class="image-copy">
+            <h2>Signal Fragment</h2>
+            <p>Price: 100 credits. Owned: <span id="standard-owned">0</span></p>
+            <div class="tile-actions">
+              <button id="buy-standard" type="button">Buy 100</button>
+              <button id="sell-standard" type="button">Sell 100</button>
+            </div>
+          </div>
+        </article>
+
+        <article id="premium-tile" class="image-tile locked">
+          <div class="image-preview premium-image" role="img" aria-label="Premium image">
+            <span id="flag-text"></span>
+          </div>
+          <div class="image-copy">
+            <h2>Premium Vault Image</h2>
+            <p>Price: 1000 credits. Owned: <span id="premium-owned">0</span></p>
+            <div class="tile-actions">
+              <button id="buy-premium" type="button">Buy 1000</button>
+              <button id="sell-premium" type="button">Sell 1000</button>
+            </div>
+          </div>
+        </article>
+      </section>
+    </section>
+  </main>
+
+  <script src="market.js" defer></script>
+</body>
+</html>

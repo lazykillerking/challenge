@@ -1,5 +1,4 @@
 const STARTING_CREDITS = 100;
-const BONUS_CREDITS = 100;
 const PREMIUM_COST = 1000;
 const FLAG = "flag{replace_this_with_your_real_flag}";
 
@@ -12,9 +11,7 @@ const loginForm = document.getElementById("login-form");
 const playerNameEl = document.getElementById("player-name");
 const creditsEl = document.getElementById("credits");
 const statusEl = document.getElementById("status");
-const bonusBtn = document.getElementById("bonus-btn");
 const logoutBtn = document.getElementById("logout-btn");
-const premiumBtn = document.getElementById("premium-btn");
 const premiumTile = document.getElementById("premium-tile");
 const premiumCopy = document.getElementById("premium-copy");
 const flagText = document.getElementById("flag-text");
@@ -70,10 +67,8 @@ function render() {
   const canOpenPremium = player.credits >= PREMIUM_COST;
   premiumTile.classList.toggle("locked", !canOpenPremium);
   premiumTile.classList.toggle("unlocked", canOpenPremium);
-  premiumBtn.disabled = !canOpenPremium;
-
   if (canOpenPremium) {
-    premiumCopy.textContent = "Premium image unlocked.";
+    premiumCopy.textContent = "Enough credits collected. Visit the market to buy the premium image.";
   } else {
     premiumCopy.textContent = `${PREMIUM_COST - player.credits} more credits required.`;
     flagText.textContent = "";
@@ -88,23 +83,6 @@ function addCredits(amount) {
   player.credits += amount;
   savePlayer();
   render();
-}
-
-// Intentionally vulnerable for the CTF: this client-side API has no real
-// server validation or rate limit, so players can automate credit claims.
-function claimDailyBonus() {
-  addCredits(BONUS_CREDITS);
-  setStatus(`Bonus accepted. Wallet credited with ${BONUS_CREDITS}.`, "success");
-}
-
-function openPremiumImage() {
-  if (!player || player.credits < PREMIUM_COST) {
-    setStatus("Premium vault rejected the wallet balance.", "error");
-    return;
-  }
-
-  flagText.textContent = FLAG;
-  setStatus("Premium vault opened.", "success");
 }
 
 function checkSupabaseConnection() {
@@ -136,19 +114,17 @@ loginForm.addEventListener("submit", (event) => {
   loginForm.reset();
   render();
   checkSupabaseConnection();
+  window.location.href = "market.html";
 });
 
-bonusBtn.addEventListener("click", claimDailyBonus);
 logoutBtn.addEventListener("click", () => {
   player = null;
   localStorage.removeItem("credit-vault-player");
   setStatus("");
   render();
 });
-premiumBtn.addEventListener("click", openPremiumImage);
 
 window.challengeApi = {
-  claimDailyBonus,
   addCredits,
   getCredits: () => (player ? player.credits : 0),
 };

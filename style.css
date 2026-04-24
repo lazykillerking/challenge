@@ -41,6 +41,22 @@ button {
   cursor: pointer;
 }
 
+.button-link {
+  display: inline-grid;
+  min-height: 44px;
+  padding: 0.75rem 1rem;
+  place-items: center;
+  border: 1px solid var(--accent);
+  background: rgba(81, 216, 138, 0.08);
+  color: var(--text);
+  text-decoration: none;
+}
+
+.button-link:hover,
+.button-link:focus-visible {
+  background: rgba(81, 216, 138, 0.18);
+}
+
 button:hover:not(:disabled),
 button:focus-visible:not(:disabled) {
   background: rgba(81, 216, 138, 0.18);
@@ -245,6 +261,17 @@ h2 {
 
 .image-copy {
   padding: 1rem;
+}
+
+.market-view {
+  align-self: center;
+}
+
+.tile-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 1rem;
 }
 
 @media (max-width: 760px) {

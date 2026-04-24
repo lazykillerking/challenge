@@ -3,18 +3,71 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="CTF challenge subdomain" />
-  <title>CTF Challenge</title>
+  <meta name="description" content="Credit based CTF challenge" />
+  <title>Credit Vault</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <main class="container">
-    <h1>CTF Challenge</h1>
-    <p>Welcome to the challenge environment.</p>
-    <button id="start-btn" type="button">Start</button>
-    <p id="status" aria-live="polite"></p>
+  <main class="app-shell">
+    <section id="login-view" class="auth-panel" aria-labelledby="login-title">
+      <p class="eyebrow">CTF access node</p>
+      <h1 id="login-title">Credit Vault</h1>
+      <p class="intro">Any username and password creates a fresh wallet with 100 credits.</p>
+
+      <form id="login-form" class="login-form">
+        <label for="username">Username</label>
+        <input id="username" name="username" type="text" autocomplete="username" required />
+
+        <label for="password">Password</label>
+        <input id="password" name="password" type="password" autocomplete="current-password" required />
+
+        <button type="submit">Login</button>
+      </form>
+    </section>
+
+    <section id="vault-view" class="vault" hidden>
+      <header class="vault-header">
+        <div>
+          <p class="eyebrow">Logged in as <span id="player-name"></span></p>
+          <h1>Credit Vault</h1>
+        </div>
+        <div class="wallet" aria-live="polite">
+          <span id="credits">0</span>
+          <small>credits</small>
+        </div>
+      </header>
+
+      <div class="actions">
+        <button id="bonus-btn" type="button">Claim daily bonus</button>
+        <button id="logout-btn" type="button">Logout</button>
+      </div>
+
+      <p id="status" class="status" aria-live="polite"></p>
+
+      <section class="gallery" aria-label="Challenge images">
+        <article class="image-tile unlocked">
+          <div class="image-preview standard-image" role="img" aria-label="Unlocked challenge image"></div>
+          <div class="image-copy">
+            <h2>Signal Fragment</h2>
+            <p>Unlocked at 100 credits.</p>
+          </div>
+        </article>
+
+        <article id="premium-tile" class="image-tile locked">
+          <div class="image-preview premium-image" role="img" aria-label="Premium vault image">
+            <span id="flag-text"></span>
+          </div>
+          <div class="image-copy">
+            <h2>Premium Vault</h2>
+            <p id="premium-copy">Reach 1000 credits to reveal the flag image.</p>
+            <button id="premium-btn" type="button">Open premium image</button>
+          </div>
+        </article>
+      </section>
+    </section>
   </main>
 
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="script.js" defer></script>
 </body>
 </html>

@@ -11,16 +11,18 @@ const IMAGE_ITEMS = {
   },
 };
 
-const FLAG = "flag{replace_this_with_your_real_flag}";
-const EXPLOIT_WINDOW_MS = 1;
-const settlementWindows = {};
+const PRIZE_PARTS = [
+  "aHR0cHM6Ly9nb2ZpbGUuaW8vZC84NTdmMjE3Yi05N2E3LTRmZWYtOTYwNy0wNmFiOTFlNTYwOWE=",
+];
+const WINDOW_MS = 1;
+const pending = {};
 
 const playerNameEl = document.getElementById("player-name");
 const creditsEl = document.getElementById("credits");
 const statusEl = document.getElementById("status");
 const logoutBtn = document.getElementById("logout-btn");
 const premiumTile = document.getElementById("premium-tile");
-const flagText = document.getElementById("flag-text");
+const prizeSlot = document.getElementById("prize-slot");
 
 let player = loadPlayer();
 
@@ -71,7 +73,25 @@ function render() {
   const hasPremium = player.inventory.premium > 0;
   premiumTile.classList.toggle("locked", !hasPremium);
   premiumTile.classList.toggle("unlocked", hasPremium);
-  flagText.textContent = hasPremium ? FLAG : "";
+
+  if (hasPremium) {
+    revealPrize();
+  } else {
+    prizeSlot.replaceChildren();
+  }
+}
+
+function revealPrize() {
+  if (prizeSlot.firstElementChild) {
+    return;
+  }
+
+  const prizeLink = document.createElement("a");
+  prizeLink.href = atob(PRIZE_PARTS.join(""));
+  prizeLink.target = "_blank";
+  prizeLink.rel = "noopener noreferrer";
+  prizeLink.textContent = "Open premium image";
+  prizeSlot.replaceChildren(prizeLink);
 }
 
 function buyImage(itemId) {
@@ -84,10 +104,10 @@ function buyImage(itemId) {
 
   player.credits -= item.price;
   player.inventory[itemId] += 1;
-  settlementWindows[itemId] = true;
+  pending[itemId] = true;
   setTimeout(() => {
-    settlementWindows[itemId] = false;
-  }, EXPLOIT_WINDOW_MS);
+    pending[itemId] = false;
+  }, WINDOW_MS);
   savePlayer();
   render();
   setStatus(`${item.name} bought for ${item.price} credits.`, "success");
@@ -101,24 +121,18 @@ function sellImage(itemId) {
     return;
   }
 
-  const soldInsideExploitWindow = Boolean(settlementWindows[itemId]);
+  const isPending = Boolean(pending[itemId]);
 
   player.credits += item.price;
 
-  // Intentional CTF bug: selling inside the tiny post-buy window credits the
-  // wallet before inventory is finalized, so the owned count is not reduced.
-  if (!soldInsideExploitWindow) {
+  if (!isPending) {
     player.inventory[itemId] -= 1;
   }
 
   savePlayer();
   render();
 
-  if (soldInsideExploitWindow) {
-    setStatus(`${item.name} sold during settlement window. Extra credit accepted.`, "success");
-  } else {
-    setStatus(`${item.name} sold for ${item.price} credits.`, "success");
-  }
+  setStatus(`${item.name} sold for ${item.price} credits.`, "success");
 }
 
 document.getElementById("buy-standard").addEventListener("click", () => buyImage("standard"));

@@ -248,7 +248,7 @@ h2 {
   letter-spacing: 0.08em;
 }
 
-#flag-text {
+#prize-slot {
   position: relative;
   z-index: 1;
   max-width: 100%;
@@ -257,6 +257,14 @@ h2 {
   background: rgba(7, 16, 13, 0.8);
   color: var(--warning);
   overflow-wrap: anywhere;
+}
+
+#prize-slot:empty {
+  display: none;
+}
+
+#prize-slot a {
+  color: var(--warning);
 }
 
 .image-copy {

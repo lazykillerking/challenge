@@ -1,6 +1,5 @@
 const STARTING_CREDITS = 100;
 const PREMIUM_COST = 1000;
-const FLAG = "flag{replace_this_with_your_real_flag}";
 
 const SUPABASE_URL = "https://YOUR_PROJECT_REF.supabase.co";
 const SUPABASE_ANON_KEY = "YOUR_SUPABASE_ANON_KEY";
@@ -14,7 +13,6 @@ const statusEl = document.getElementById("status");
 const logoutBtn = document.getElementById("logout-btn");
 const premiumTile = document.getElementById("premium-tile");
 const premiumCopy = document.getElementById("premium-copy");
-const flagText = document.getElementById("flag-text");
 
 const hasSupabaseConfig =
   SUPABASE_URL !== "https://YOUR_PROJECT_REF.supabase.co" &&
@@ -71,7 +69,6 @@ function render() {
     premiumCopy.textContent = "Enough credits collected. Visit the market to buy the premium image.";
   } else {
     premiumCopy.textContent = `${PREMIUM_COST - player.credits} more credits required.`;
-    flagText.textContent = "";
   }
 }
 
